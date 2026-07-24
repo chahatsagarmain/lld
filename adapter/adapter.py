@@ -9,6 +9,9 @@
 # in this case you would need to make a complete change in codebase 
 # to fix this you would instead , create an adapter that takes in original interface and the adapter would expose send method 
 
+# so instead of making changes all around your code to use , the new implmentation , you just create the adapter which implements already working solution 
+
+
 from abc import ABC , abstractmethod
 
 class NotificationService(ABC):
