@@ -48,3 +48,13 @@ Shows a more efficient way to synchronize alternating threads using condition va
 
 #### Recent Improvements:
 - **Boundary Bug Fix:** Corrected a boundary condition where `odd thread printing 101` was printed (exceeding `mx = 100`). Checking the loop state inside the lock block (`while num % 2 and num <= mx: cv.wait()`) and checking `if num > mx: break` ensures both threads exit cleanly without extra output.
+
+---
+
+### [prod_cons.py](file:///D:/distributed-crawler/lld/multi-threading/prod_cons.py)
+Implements the classic **Producer-Consumer** communication pattern using a bounded queue and condition variables.
+
+#### Key Features:
+- **Condition Synchronization:** Uses a single `threading.Condition` variable to block the producer when the queue is full (`len(q) >= max_len`) and block the consumer when the queue is empty (`len(q) == 0`).
+- **Graceful Shutdown (Poison Pill):** Appends a sentinel value `-1` to the queue after all normal items have been produced, signaling the consumer to stop listening and terminate cleanly.
+- **Performance Optimization:** Leverages `collections.deque` for $O(1)$ fast pop-left operations (`popleft()`) rather than the inefficient list pop operations.
