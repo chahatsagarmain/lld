@@ -151,3 +151,13 @@ coffee_with_milk_and_sugar = SugarDecorator(coffee_with_milk)  # Description: "c
 3. **How does the Decorator Pattern compare to the Proxy Pattern?**
    - **Decorator** focuses on dynamically adding/extending behaviors/features.
    - **Proxy** focuses on controlling access to the underlying object (e.g., lazy loading, security, logging, caching) and usually manages the lifecycle of the real subject itself.
+
+---
+
+## 🚀 How to Run the Example
+
+Run the script from the workspace root:
+
+```bash
+python decorator/decorator.py
+```
