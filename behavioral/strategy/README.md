@@ -21,7 +21,7 @@ Think of **navigating to an airport on Google Maps**:
 ## 🛠️ The Problem & Solution
 
 ### The Problem (Conditional Spaghetti Code)
-Imagine a [PaymentProcessor](file:///D:/distributed-crawler/lld/strategy/payment_processor.py#L3) that needs to handle multiple payment methods (Credit Card, Debit Card, PayPal, Crypto):
+Imagine a [PaymentProcessor](file:///D:/distributed-crawler/lld/behavioral/strategy/payment_processor.py#L3) that needs to handle multiple payment methods (Credit Card, Debit Card, PayPal, Crypto):
 - If implemented using conditional branches inside a single class:
   ```python
   class PaymentProcessor:
@@ -38,9 +38,9 @@ Imagine a [PaymentProcessor](file:///D:/distributed-crawler/lld/strategy/payment
 - **Difficult Testing:** Testing one algorithm requires instantiating the entire processor with all its dependencies.
 
 ### The Solution (Encapsulated Strategy Family)
-1. Define a common interface ([PaymentStrategy](file:///D:/distributed-crawler/lld/strategy/payment_strategy.py#L3)) declaring `process_strategy(sender, receiver, amount)`.
-2. Extract each payment algorithm into its own dedicated class ([CreditCardPayment](file:///D:/distributed-crawler/lld/strategy/credit_card.py#L3), [DebitCardPayment](file:///D:/distributed-crawler/lld/strategy/debit_card.py#L3)).
-3. [PaymentProcessor](file:///D:/distributed-crawler/lld/strategy/payment_processor.py#L3) accepts a `PaymentStrategy` object and delegates the execution to it.
+1. Define a common interface ([PaymentStrategy](file:///D:/distributed-crawler/lld/behavioral/strategy/payment_strategy.py#L3)) declaring `process_strategy(sender, receiver, amount)`.
+2. Extract each payment algorithm into its own dedicated class ([CreditCardPayment](file:///D:/distributed-crawler/lld/behavioral/strategy/credit_card.py#L3), [DebitCardPayment](file:///D:/distributed-crawler/lld/behavioral/strategy/debit_card.py#L3)).
+3. [PaymentProcessor](file:///D:/distributed-crawler/lld/behavioral/strategy/payment_processor.py#L3) accepts a `PaymentStrategy` object and delegates the execution to it.
 
 ---
 
@@ -99,21 +99,21 @@ sequenceDiagram
 
 The strategy implementation consists of:
 
-1. **Strategy Interface**: [PaymentStrategy](file:///D:/distributed-crawler/lld/strategy/payment_strategy.py#L3)
-   Defines the abstract method [process_strategy()](file:///D:/distributed-crawler/lld/strategy/payment_strategy.py#L10) ensuring all payment mechanisms follow the same signature.
+1. **Strategy Interface**: [PaymentStrategy](file:///D:/distributed-crawler/lld/behavioral/strategy/payment_strategy.py#L3)
+   Defines the abstract method [process_strategy()](file:///D:/distributed-crawler/lld/behavioral/strategy/payment_strategy.py#L10) ensuring all payment mechanisms follow the same signature.
 2. **Concrete Strategies**:
-   - [CreditCardPayment](file:///D:/distributed-crawler/lld/strategy/credit_card.py#L3): Implements processing via credit card.
-   - [DebitCardPayment](file:///D:/distributed-crawler/lld/strategy/debit_card.py#L3): Implements processing via debit card.
-3. **The Context**: [PaymentProcessor](file:///D:/distributed-crawler/lld/strategy/payment_processor.py#L3)
-   Maintains transaction details (`sender`, `receiver`, `amount`). The method [process_payement()](file:///D:/distributed-crawler/lld/strategy/payment_processor.py#L14) delegates actual execution to the injected strategy.
-4. **Client Runner**: [main.py](file:///D:/distributed-crawler/lld/strategy/main.py#L42)
+   - [CreditCardPayment](file:///D:/distributed-crawler/lld/behavioral/strategy/credit_card.py#L3): Implements processing via credit card.
+   - [DebitCardPayment](file:///D:/distributed-crawler/lld/behavioral/strategy/debit_card.py#L3): Implements processing via debit card.
+3. **The Context**: [PaymentProcessor](file:///D:/distributed-crawler/lld/behavioral/strategy/payment_processor.py#L3)
+   Maintains transaction details (`sender`, `receiver`, `amount`). The method [process_payement()](file:///D:/distributed-crawler/lld/behavioral/strategy/payment_processor.py#L14) delegates actual execution to the injected strategy.
+4. **Client Runner**: [main.py](file:///D:/distributed-crawler/lld/behavioral/strategy/main.py#L42)
    Configures the context and dynamically executes transactions with different payment strategies.
 
 ---
 
 ## 💻 Example Usage Code
 
-From [main.py](file:///D:/distributed-crawler/lld/strategy/main.py):
+From [main.py](file:///D:/distributed-crawler/lld/behavioral/strategy/main.py):
 
 ```python
 from payment_processor import PaymentProcessor
@@ -187,5 +187,5 @@ process 100 from Alice to Bob via debit card
 Run the main file from the workspace root:
 
 ```bash
-python strategy/main.py
+python behavioral/strategy/main.py
 ```

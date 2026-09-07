@@ -36,8 +36,8 @@ Suppose you are designing an order validation system or request processor. You n
   This creates a gigantic, fragile function that violates the **Single Responsibility Principle** and **Open-Closed Principle**. Adding a new check or changing the ordering requires modifying this monolithic code, risking regressions.
 
 ### The Solution (Linked Chain of Handlers)
-1. Define a common handler interface ([HandlerInterface](file:///D:/distributed-crawler/lld/chain%20of%20responsibility/handlers.py#L4)) declaring `handle(req)` and `set_next(handler)`.
-2. Extract each check into its own standalone class ([Handler1](file:///D:/distributed-crawler/lld/chain%20of%20responsibility/handlers.py#L17), [Handler2](file:///D:/distributed-crawler/lld/chain%20of%20responsibility/handlers.py#L27), [Handler3](file:///D:/distributed-crawler/lld/chain%20of%20responsibility/handlers.py#L37)).
+1. Define a common handler interface ([HandlerInterface](file:///D:/distributed-crawler/lld/behavioral/chain%20of%20responsibility/handlers.py#L4)) declaring `handle(req)` and `set_next(handler)`.
+2. Extract each check into its own standalone class ([Handler1](file:///D:/distributed-crawler/lld/behavioral/chain%20of%20responsibility/handlers.py#L17), [Handler2](file:///D:/distributed-crawler/lld/behavioral/chain%20of%20responsibility/handlers.py#L27), [Handler3](file:///D:/distributed-crawler/lld/behavioral/chain%20of%20responsibility/handlers.py#L37)).
 3. Link the handlers together at runtime: `h1.set_next(h2).set_next(h3)`.
 4. The client submits requests to the first handler in the chain. The request travels until a handler handles it (or the end is reached).
 
@@ -96,26 +96,26 @@ sequenceDiagram
 
 ## 🔍 Code Walkthrough
 
-The implementation is found in [handlers.py](file:///D:/distributed-crawler/lld/chain%20of%20responsibility/handlers.py):
+The implementation is found in [handlers.py](file:///D:/distributed-crawler/lld/behavioral/chain%20of%20responsibility/handlers.py):
 
-1. **Handler Interface**: [HandlerInterface](file:///D:/distributed-crawler/lld/chain%20of%20responsibility/handlers.py#L4)
+1. **Handler Interface**: [HandlerInterface](file:///D:/distributed-crawler/lld/behavioral/chain%20of%20responsibility/handlers.py#L4)
    - Initializes `_next_handler = None`.
-   - [set_next()](file:///D:/distributed-crawler/lld/chain%20of%20responsibility/handlers.py#L9): Stores the reference to the next handler and returns that handler, allowing fluent chaining (`h1.set_next(h2).set_next(h3)`).
-   - [handle()](file:///D:/distributed-crawler/lld/chain%20of%20responsibility/handlers.py#L14): Abstract method to be implemented by concrete handlers.
+   - [set_next()](file:///D:/distributed-crawler/lld/behavioral/chain%20of%20responsibility/handlers.py#L9): Stores the reference to the next handler and returns that handler, allowing fluent chaining (`h1.set_next(h2).set_next(h3)`).
+   - [handle()](file:///D:/distributed-crawler/lld/behavioral/chain%20of%20responsibility/handlers.py#L14): Abstract method to be implemented by concrete handlers.
 
 2. **Concrete Handlers**:
-   - [Handler1](file:///D:/distributed-crawler/lld/chain%20of%20responsibility/handlers.py#L17): Checks if `"req1"` exists in the dictionary. If so, it processes it; otherwise, passes it to `_next_handler`.
-   - [Handler2](file:///D:/distributed-crawler/lld/chain%20of%20responsibility/handlers.py#L27): Checks for `"req2"`. Delegates to next if absent.
-   - [Handler3](file:///D:/distributed-crawler/lld/chain%20of%20responsibility/handlers.py#L37): Checks for `"req3"`. If not present and no next handler exists, outputs `"Request unhandled at the end of the chain"`.
+   - [Handler1](file:///D:/distributed-crawler/lld/behavioral/chain%20of%20responsibility/handlers.py#L17): Checks if `"req1"` exists in the dictionary. If so, it processes it; otherwise, passes it to `_next_handler`.
+   - [Handler2](file:///D:/distributed-crawler/lld/behavioral/chain%20of%20responsibility/handlers.py#L27): Checks for `"req2"`. Delegates to next if absent.
+   - [Handler3](file:///D:/distributed-crawler/lld/behavioral/chain%20of%20responsibility/handlers.py#L37): Checks for `"req3"`. If not present and no next handler exists, outputs `"Request unhandled at the end of the chain"`.
 
-3. **Client Execution**: [main.py](file:///D:/distributed-crawler/lld/chain%20of%20responsibility/main.py#L13)
+3. **Client Execution**: [main.py](file:///D:/distributed-crawler/lld/behavioral/chain%20of%20responsibility/main.py#L13)
    Constructs the chain and fires multiple request payloads.
 
 ---
 
 ## 💻 Example Usage Code
 
-From [main.py](file:///D:/distributed-crawler/lld/chain%20of%20responsibility/main.py):
+From [main.py](file:///D:/distributed-crawler/lld/behavioral/chain%20of%20responsibility/main.py):
 
 ```python
 from handlers import Handler1, Handler2, Handler3
@@ -202,5 +202,5 @@ Request unhandled at the end of the chain
 Run the main file from the workspace root:
 
 ```bash
-python "chain of responsibility/main.py"
+python "behavioral/chain of responsibility/main.py"
 ```

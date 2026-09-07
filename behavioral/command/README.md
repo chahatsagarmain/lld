@@ -31,9 +31,9 @@ Imagine creating a UI button or a network request handler:
   - **Audit Logging** (recording every operation executed).
 
 ### The Solution (Encapsulated Command Objects)
-1. Declare a common command interface ([Order](file:///D:/distributed-crawler/lld/command/order.py#L3)) with an `execute_order()` method.
-2. For each action, create a concrete command class ([OrderPizza](file:///D:/distributed-crawler/lld/command/order_pizza.py#L4), [OrderBurger](file:///D:/distributed-crawler/lld/command/order_burger.py#L4)) that holds a reference to the [Chef](file:///D:/distributed-crawler/lld/command/chef.py#L1) (Receiver).
-3. The [Waiter](file:///D:/distributed-crawler/lld/command/waiter.py#L3) (Invoker) accepts any `Order` object and simply calls `order.execute_order()`. The Waiter does not know or care how a pizza is prepared.
+1. Declare a common command interface ([Order](file:///D:/distributed-crawler/lld/behavioral/command/order.py#L3)) with an `execute_order()` method.
+2. For each action, create a concrete command class ([OrderPizza](file:///D:/distributed-crawler/lld/behavioral/command/order_pizza.py#L4), [OrderBurger](file:///D:/distributed-crawler/lld/behavioral/command/order_burger.py#L4)) that holds a reference to the [Chef](file:///D:/distributed-crawler/lld/behavioral/command/chef.py#L1) (Receiver).
+3. The [Waiter](file:///D:/distributed-crawler/lld/behavioral/command/waiter.py#L3) (Invoker) accepts any `Order` object and simply calls `order.execute_order()`. The Waiter does not know or care how a pizza is prepared.
 
 ---
 
@@ -102,25 +102,25 @@ sequenceDiagram
 
 The implementation is cleanly separated across files:
 
-1. **Command Interface**: [Order](file:///D:/distributed-crawler/lld/command/order.py#L3)
+1. **Command Interface**: [Order](file:///D:/distributed-crawler/lld/behavioral/command/order.py#L3)
    Defines the abstract method `execute_order()`.
-2. **The Receiver**: [Chef](file:///D:/distributed-crawler/lld/command/chef.py#L1)
+2. **The Receiver**: [Chef](file:///D:/distributed-crawler/lld/behavioral/command/chef.py#L1)
    The class containing actual domain execution logic:
    - `cook_pizza()`: prints cooking confirmation.
    - `cook_burger()`: prints cooking confirmation.
 3. **Concrete Commands**:
-   - [OrderPizza](file:///D:/distributed-crawler/lld/command/order_pizza.py#L4): Stores `_chef` and implements `execute_order()` by calling `self._chef.cook_pizza()`.
-   - [OrderBurger](file:///D:/distributed-crawler/lld/command/order_burger.py#L4): Stores `_chef` and implements `execute_order()` by calling `self._chef.cook_burger()`.
-4. **The Invoker**: [Waiter](file:///D:/distributed-crawler/lld/command/waiter.py#L3)
+   - [OrderPizza](file:///D:/distributed-crawler/lld/behavioral/command/order_pizza.py#L4): Stores `_chef` and implements `execute_order()` by calling `self._chef.cook_pizza()`.
+   - [OrderBurger](file:///D:/distributed-crawler/lld/behavioral/command/order_burger.py#L4): Stores `_chef` and implements `execute_order()` by calling `self._chef.cook_burger()`.
+4. **The Invoker**: [Waiter](file:///D:/distributed-crawler/lld/behavioral/command/waiter.py#L3)
    Maintains no knowledge of food preparation. When `take_order(order: Order)` is called, it triggers `order.execute_order()`.
-5. **The Client**: [main.py](file:///D:/distributed-crawler/lld/command/main.py#L39)
+5. **The Client**: [main.py](file:///D:/distributed-crawler/lld/behavioral/command/main.py#L39)
    Creates the Receiver, packages requests into Command instances, and hands them to the Waiter.
 
 ---
 
 ## 💻 Example Usage Code
 
-From [main.py](file:///D:/distributed-crawler/lld/command/main.py):
+From [main.py](file:///D:/distributed-crawler/lld/behavioral/command/main.py):
 
 ```python
 from waiter import Waiter 
@@ -199,5 +199,5 @@ chef cooked a burger
 Run the main file from the workspace root:
 
 ```bash
-python command/main.py
+python behavioral/command/main.py
 ```

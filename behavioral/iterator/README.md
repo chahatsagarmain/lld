@@ -21,7 +21,7 @@ Think of a **TV remote control with "Next Channel" and "Previous Channel" button
 ## 🛠️ The Problem & Solution
 
 ### The Problem (Exposing Internal Collection Storage)
-Suppose your application stores items in diverse data structures: some in standard arrays ([list.py](file:///D:/distributed-crawler/lld/iterator/list.py)), some in linked lists ([linkedlist.py](file:///D:/distributed-crawler/lld/iterator/linkedlist.py)), and others in binary search trees.
+Suppose your application stores items in diverse data structures: some in standard arrays ([list.py](file:///D:/distributed-crawler/lld/behavioral/iterator/list.py)), some in linked lists ([linkedlist.py](file:///D:/distributed-crawler/lld/behavioral/iterator/linkedlist.py)), and others in binary search trees.
 - Without an iterator, client code must write completely different looping logic for each structure:
   - For lists: indexed access `items[i]` with integer increment.
   - For linked lists: node pointer following `current = current.next`.
@@ -29,10 +29,10 @@ Suppose your application stores items in diverse data structures: some in standa
 - This tightly couples client code to internal collection representations and duplicates traversal algorithms across the codebase.
 
 ### The Solution (Uniform Traversal Contract)
-1. Define a common iterator interface ([IntIterator](file:///D:/distributed-crawler/lld/iterator/iterator.py#L5)) declaring standard traversal methods: `has_next() -> bool` and `next() -> int | None`.
+1. Define a common iterator interface ([IntIterator](file:///D:/distributed-crawler/lld/behavioral/iterator/iterator.py#L5)) declaring standard traversal methods: `has_next() -> bool` and `next() -> int | None`.
 2. Implement concrete iterators for each collection type:
-   - [ListIterator](file:///D:/distributed-crawler/lld/iterator/list.py#L5) for index-based array iteration.
-   - [LinkedListIterator](file:///D:/distributed-crawler/lld/iterator/linkedlist.py#L49) for pointer-based node traversal.
+   - [ListIterator](file:///D:/distributed-crawler/lld/behavioral/iterator/list.py#L5) for index-based array iteration.
+   - [LinkedListIterator](file:///D:/distributed-crawler/lld/behavioral/iterator/linkedlist.py#L49) for pointer-based node traversal.
 3. The client writes a single traversal loop using `has_next()` and `next()`, completely oblivious to whether the elements are in an array or a linked list.
 
 ---
@@ -111,23 +111,23 @@ sequenceDiagram
 
 The codebase is organized into clean, focused components:
 
-1. **Iterator Interface**: [IntIterator](file:///D:/distributed-crawler/lld/iterator/iterator.py#L5)
-   - [has_next()](file:///D:/distributed-crawler/lld/iterator/iterator.py#L14): Returns `True` if more elements remain.
-   - [next()](file:///D:/distributed-crawler/lld/iterator/iterator.py#L24): Returns the next element or `None`.
+1. **Iterator Interface**: [IntIterator](file:///D:/distributed-crawler/lld/behavioral/iterator/iterator.py#L5)
+   - [has_next()](file:///D:/distributed-crawler/lld/behavioral/iterator/iterator.py#L14): Returns `True` if more elements remain.
+   - [next()](file:///D:/distributed-crawler/lld/behavioral/iterator/iterator.py#L24): Returns the next element or `None`.
 2. **Collection & Node Structures**:
-   - [Node](file:///D:/distributed-crawler/lld/iterator/linkedlist.py#L5): Single node holding an integer `val` and optional `next` pointer.
-   - [LinkedList](file:///D:/distributed-crawler/lld/iterator/linkedlist.py#L22): Singly-linked list managing `front` and `back` pointers, supporting [add_node()](file:///D:/distributed-crawler/lld/iterator/linkedlist.py#L32).
+   - [Node](file:///D:/distributed-crawler/lld/behavioral/iterator/linkedlist.py#L5): Single node holding an integer `val` and optional `next` pointer.
+   - [LinkedList](file:///D:/distributed-crawler/lld/behavioral/iterator/linkedlist.py#L22): Singly-linked list managing `front` and `back` pointers, supporting [add_node()](file:///D:/distributed-crawler/lld/behavioral/iterator/linkedlist.py#L32).
 3. **Concrete Iterators**:
-   - [ListIterator](file:///D:/distributed-crawler/lld/iterator/list.py#L5): Maintains internal index `_pos`. In `next()`, returns `_ls[_pos]` and increments `_pos`.
-   - [LinkedListIterator](file:///D:/distributed-crawler/lld/iterator/linkedlist.py#L49): Maintains `pos` pointer initialized to `ll.front`. In `next()`, reads `pos.val` and advances `pos = pos.next`.
-4. **Client Runner**: [main.py](file:///D:/distributed-crawler/lld/iterator/main.py#L5)
+   - [ListIterator](file:///D:/distributed-crawler/lld/behavioral/iterator/list.py#L5): Maintains internal index `_pos`. In `next()`, returns `_ls[_pos]` and increments `_pos`.
+   - [LinkedListIterator](file:///D:/distributed-crawler/lld/behavioral/iterator/linkedlist.py#L49): Maintains `pos` pointer initialized to `ll.front`. In `next()`, reads `pos.val` and advances `pos = pos.next`.
+4. **Client Runner**: [main.py](file:///D:/distributed-crawler/lld/behavioral/iterator/main.py#L5)
    Traverses both list types using identical while-loop patterns.
 
 ---
 
 ## 💻 Example Usage Code
 
-From [main.py](file:///D:/distributed-crawler/lld/iterator/main.py):
+From [main.py](file:///D:/distributed-crawler/lld/behavioral/iterator/main.py):
 
 ```python
 from linkedlist import LinkedList, LinkedListIterator
@@ -216,5 +216,5 @@ LinkedList element: 30
 Run the main file from the workspace root:
 
 ```bash
-python iterator/main.py
+python behavioral/iterator/main.py
 ```

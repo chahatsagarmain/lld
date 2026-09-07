@@ -2,7 +2,7 @@
 
 The **Decorator Pattern** is a structural design pattern that allows behavior to be added to an individual object, dynamically, without affecting the behavior of other objects from the same class.
 
-This guide helps you understand, learn, and revise the implementation found in [decorator.py](file:///D:/distributed-crawler/lld/decorator/decorator.py).
+This guide helps you understand, learn, and revise the implementation found in [decorator.py](file:///D:/distributed-crawler/lld/structural/decorator/decorator.py).
 
 ---
 
@@ -21,7 +21,7 @@ Instead of using **inheritance** to extend behavior (which happens at compile-ti
 ## 🛠️ The Problem & Solution
 
 ### The Problem (Class Explosion)
-Imagine you have a base [Coffee](file:///D:/distributed-crawler/lld/decorator/decorator.py#L23) class. Customers want various combinations of condiments: Milk, Sugar, Whip, Soy, Caramel, etc.
+Imagine you have a base [Coffee](file:///D:/distributed-crawler/lld/structural/decorator/decorator.py#L23) class. Customers want various combinations of condiments: Milk, Sugar, Whip, Soy, Caramel, etc.
 - If you use inheritance: You would need `CoffeeWithMilk`, `CoffeeWithSugar`, `CoffeeWithMilkAndSugar`, `CoffeeWithWhipAndMilk`, and so on. This leads to a **combinatorial class explosion**.
 - If you use boolean flags in the base class: Adding new condiments requires modifying the base class, violating the **Open-Closed Principle (OCP)**.
 
@@ -80,7 +80,7 @@ graph LR
     end
 ```
 
-When [get_price()](file:///D:/distributed-crawler/lld/decorator/decorator.py#L60) is called on `SugarDecorator`:
+When [get_price()](file:///D:/distributed-crawler/lld/structural/decorator/decorator.py#L60) is called on `SugarDecorator`:
 1. `SugarDecorator` calls `MilkDecorator.get_price()`.
 2. `MilkDecorator` calls `Coffee.get_price()` which returns `100`.
 3. `MilkDecorator` adds `20` and returns `120`.
@@ -90,19 +90,19 @@ When [get_price()](file:///D:/distributed-crawler/lld/decorator/decorator.py#L60
 
 ## 🔍 Code Walkthrough
 
-The codebase contains the following key elements in [decorator.py](file:///D:/distributed-crawler/lld/decorator/decorator.py):
+The codebase contains the following key elements in [decorator.py](file:///D:/distributed-crawler/lld/structural/decorator/decorator.py):
 
-1. **Component Interface**: [Beverage](file:///D:/distributed-crawler/lld/decorator/decorator.py#L13)
+1. **Component Interface**: [Beverage](file:///D:/distributed-crawler/lld/structural/decorator/decorator.py#L13)
    Defines the interface for objects that can have responsibilities added to them dynamically.
-2. **Concrete Component**: [Coffee](file:///D:/distributed-crawler/lld/decorator/decorator.py#L23)
+2. **Concrete Component**: [Coffee](file:///D:/distributed-crawler/lld/structural/decorator/decorator.py#L23)
    The basic object to which additional responsibilities can be attached.
-3. **Base Decorator**: [CoffeeDecorator](file:///D:/distributed-crawler/lld/decorator/decorator.py#L33)
-   Maintains a reference to a [Beverage](file:///D:/distributed-crawler/lld/decorator/decorator.py#L13) object and defines an interface that conforms to [Beverage](file:///D:/distributed-crawler/lld/decorator/decorator.py#L13)'s interface.
+3. **Base Decorator**: [CoffeeDecorator](file:///D:/distributed-crawler/lld/structural/decorator/decorator.py#L33)
+   Maintains a reference to a [Beverage](file:///D:/distributed-crawler/lld/structural/decorator/decorator.py#L13) object and defines an interface that conforms to [Beverage](file:///D:/distributed-crawler/lld/structural/decorator/decorator.py#L13)'s interface.
 4. **Concrete Decorators**:
-   - [MilkDecorator](file:///D:/distributed-crawler/lld/decorator/decorator.py#L47): Adds milk and increases the price by `20`.
-   - [SugarDecorator](file:///D:/distributed-crawler/lld/decorator/decorator.py#L55): Adds sugar and increases the price by `5`.
+   - [MilkDecorator](file:///D:/distributed-crawler/lld/structural/decorator/decorator.py#L47): Adds milk and increases the price by `20`.
+   - [SugarDecorator](file:///D:/distributed-crawler/lld/structural/decorator/decorator.py#L55): Adds sugar and increases the price by `5`.
 
-### Example Usage Code from [main](file:///D:/distributed-crawler/lld/decorator/decorator.py#L63)
+### Example Usage Code from [main](file:///D:/distributed-crawler/lld/structural/decorator/decorator.py#L63)
 
 ```python
 # Create a base coffee
@@ -159,5 +159,5 @@ coffee_with_milk_and_sugar = SugarDecorator(coffee_with_milk)  # Description: "c
 Run the script from the workspace root:
 
 ```bash
-python decorator/decorator.py
+python structural/decorator/decorator.py
 ```

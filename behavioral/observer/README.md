@@ -23,14 +23,14 @@ Think of a **YouTube channel or newsletter subscription**:
 ## 🛠️ The Problem & Solution
 
 ### The Problem (Polling vs Tight Coupling)
-Imagine a radio/cellular broadcast tower ([Tower](file:///D:/distributed-crawler/lld/observer/tower.py#L4)) transmitting numeric signals. Multiple devices—such as phones ([PhoneReceiver](file:///D:/distributed-crawler/lld/observer/phone_receiver.py#L3)) and televisions ([TvReceiver](file:///D:/distributed-crawler/lld/observer/tv_receiver.py#L3))—need to react immediately to new signals.
+Imagine a radio/cellular broadcast tower ([Tower](file:///D:/distributed-crawler/lld/behavioral/observer/tower.py#L4)) transmitting numeric signals. Multiple devices—such as phones ([PhoneReceiver](file:///D:/distributed-crawler/lld/behavioral/observer/phone_receiver.py#L3)) and televisions ([TvReceiver](file:///D:/distributed-crawler/lld/behavioral/observer/tv_receiver.py#L3))—need to react immediately to new signals.
 - **Polling:** If each receiver repeatedly queries the tower in a tight loop, CPU and network bandwidth are wasted, and updates are delayed by the polling interval.
 - **Direct Method Invocations:** If the tower directly holds explicit references to `phone` and `tv` instances (`self.phone.ring()`, `self.tv.display()`), the tower becomes tightly coupled to specific device classes. Adding a smart watch or laptop receiver would require modifying the tower class every time.
 
 ### The Solution (Thread-Safe Event Broadcast)
-1. Define an [Observer](file:///D:/distributed-crawler/lld/observer/observer.py#L3) interface with `receive_signal(signal: int)`.
-2. Create a generic [Subject](file:///D:/distributed-crawler/lld/observer/subject.py#L5) base class that maintains a list of `Observer` instances with thread-safe `add_observer`, `remove_observer`, and `notify_observers`.
-3. [Tower](file:///D:/distributed-crawler/lld/observer/tower.py#L4) inherits from `Subject`. When its signal updates, it calls `self.notify_observers(signal)`.
+1. Define an [Observer](file:///D:/distributed-crawler/lld/behavioral/observer/observer.py#L3) interface with `receive_signal(signal: int)`.
+2. Create a generic [Subject](file:///D:/distributed-crawler/lld/behavioral/observer/subject.py#L5) base class that maintains a list of `Observer` instances with thread-safe `add_observer`, `remove_observer`, and `notify_observers`.
+3. [Tower](file:///D:/distributed-crawler/lld/behavioral/observer/tower.py#L4) inherits from `Subject`. When its signal updates, it calls `self.notify_observers(signal)`.
 4. Any device implementing `Observer` can subscribe dynamically without the tower knowing its concrete identity.
 
 ---
@@ -102,25 +102,25 @@ sequenceDiagram
 
 The implementation is modularized across dedicated files:
 
-1. **Observer Interface**: [Observer](file:///D:/distributed-crawler/lld/observer/observer.py#L3)
+1. **Observer Interface**: [Observer](file:///D:/distributed-crawler/lld/behavioral/observer/observer.py#L3)
    Defines the contract method `receive_signal(self, signal: int)`.
-2. **Subject Base Class**: [Subject](file:///D:/distributed-crawler/lld/observer/subject.py#L5)
-   - [add_observer()](file:///D:/distributed-crawler/lld/observer/subject.py#L14): Registers an observer thread-safely under `_lock`.
-   - [remove_observer()](file:///D:/distributed-crawler/lld/observer/subject.py#L20): Deregisters an observer under `_lock`.
-   - [notify_observers()](file:///D:/distributed-crawler/lld/observer/subject.py#L26): **Crucial thread-safety pattern**: It makes a shallow copy `observers_copy = list(self._observers)` under lock, releases the lock, and then executes callbacks. This prevents deadlocks if an observer's callback attempts to register or unregister an observer!
-3. **Concrete Subject**: [Tower](file:///D:/distributed-crawler/lld/observer/tower.py#L4)
-   Manages `_signal` protected by `_signal_lock`. Calling [update_signal()](file:///D:/distributed-crawler/lld/observer/tower.py#L20) increments the signal and broadcasts to all subscribers.
+2. **Subject Base Class**: [Subject](file:///D:/distributed-crawler/lld/behavioral/observer/subject.py#L5)
+   - [add_observer()](file:///D:/distributed-crawler/lld/behavioral/observer/subject.py#L14): Registers an observer thread-safely under `_lock`.
+   - [remove_observer()](file:///D:/distributed-crawler/lld/behavioral/observer/subject.py#L20): Deregisters an observer under `_lock`.
+   - [notify_observers()](file:///D:/distributed-crawler/lld/behavioral/observer/subject.py#L26): **Crucial thread-safety pattern**: It makes a shallow copy `observers_copy = list(self._observers)` under lock, releases the lock, and then executes callbacks. This prevents deadlocks if an observer's callback attempts to register or unregister an observer!
+3. **Concrete Subject**: [Tower](file:///D:/distributed-crawler/lld/behavioral/observer/tower.py#L4)
+   Manages `_signal` protected by `_signal_lock`. Calling [update_signal()](file:///D:/distributed-crawler/lld/behavioral/observer/tower.py#L20) increments the signal and broadcasts to all subscribers.
 4. **Concrete Observers**:
-   - [PhoneReceiver](file:///D:/distributed-crawler/lld/observer/phone_receiver.py#L3): Displays phone signal update.
-   - [TvReceiver](file:///D:/distributed-crawler/lld/observer/tv_receiver.py#L3): Displays TV signal update.
-5. **Main Execution**: [main.py](file:///D:/distributed-crawler/lld/observer/main.py#L6)
+   - [PhoneReceiver](file:///D:/distributed-crawler/lld/behavioral/observer/phone_receiver.py#L3): Displays phone signal update.
+   - [TvReceiver](file:///D:/distributed-crawler/lld/behavioral/observer/tv_receiver.py#L3): Displays TV signal update.
+5. **Main Execution**: [main.py](file:///D:/distributed-crawler/lld/behavioral/observer/main.py#L6)
    Spawns a thread that updates the tower 5 times.
 
 ---
 
 ## 💻 Example Usage Code
 
-From [main.py](file:///D:/distributed-crawler/lld/observer/main.py):
+From [main.py](file:///D:/distributed-crawler/lld/behavioral/observer/main.py):
 
 ```python
 import threading
@@ -199,5 +199,5 @@ TV received signal 2
 Run the main file from the workspace root:
 
 ```bash
-python observer/main.py
+python behavioral/observer/main.py
 ```

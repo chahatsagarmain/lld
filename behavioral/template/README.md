@@ -36,7 +36,7 @@ Suppose you are building data parsers for different document types: CSV, PDF, JS
   - If the general parsing workflow changes (e.g. adding a security validation step), you must update every parser class in the codebase.
 
 ### The Solution (Template Method in Abstract Base Class)
-1. Create an abstract base class ([DataParserTemplate](file:///D:/distributed-crawler/lld/template/template.py#L14)) containing:
+1. Create an abstract base class ([DataParserTemplate](file:///D:/distributed-crawler/lld/behavioral/template/template.py#L14)) containing:
    - Shared concrete operations: `open()` and `close()`.
    - An abstract primitive operation: `parse()`.
    - The **Template Method**: `parse_data()` which coordinates the exact order:
@@ -46,7 +46,7 @@ Suppose you are building data parsers for different document types: CSV, PDF, JS
          self.parse()
          self.close()
      ```
-2. Concrete subclasses ([CSVParser](file:///D:/distributed-crawler/lld/template/template.py#L56), [PDFParser](file:///D:/distributed-crawler/lld/template/template.py#L64)) inherit from `DataParserTemplate` and implement *only* the `parse()` step.
+2. Concrete subclasses ([CSVParser](file:///D:/distributed-crawler/lld/behavioral/template/template.py#L56), [PDFParser](file:///D:/distributed-crawler/lld/behavioral/template/template.py#L64)) inherit from `DataParserTemplate` and implement *only* the `parse()` step.
 
 ---
 
@@ -98,25 +98,25 @@ sequenceDiagram
 
 ## 🔍 Code Walkthrough
 
-The implementation in [template.py](file:///D:/distributed-crawler/lld/template/template.py) contains:
+The implementation in [template.py](file:///D:/distributed-crawler/lld/behavioral/template/template.py) contains:
 
-1. **Abstract Template Class**: [DataParserTemplate](file:///D:/distributed-crawler/lld/template/template.py#L14)
-   - [__init__(path: str)](file:///D:/distributed-crawler/lld/template/template.py#L23): Stores file path.
-   - [open()](file:///D:/distributed-crawler/lld/template/template.py#L34): Concrete shared file open logic.
-   - [close()](file:///D:/distributed-crawler/lld/template/template.py#L40): Concrete shared cleanup logic.
-   - [parse()](file:///D:/distributed-crawler/lld/template/template.py#L27): Abstract primitive operation to be filled in by subclasses.
-   - [parse_data()](file:///D:/distributed-crawler/lld/template/template.py#L46): The **Template Method** defining the sequence `self.open() -> self.parse() -> self.close()`.
+1. **Abstract Template Class**: [DataParserTemplate](file:///D:/distributed-crawler/lld/behavioral/template/template.py#L14)
+   - [__init__(path: str)](file:///D:/distributed-crawler/lld/behavioral/template/template.py#L23): Stores file path.
+   - [open()](file:///D:/distributed-crawler/lld/behavioral/template/template.py#L34): Concrete shared file open logic.
+   - [close()](file:///D:/distributed-crawler/lld/behavioral/template/template.py#L40): Concrete shared cleanup logic.
+   - [parse()](file:///D:/distributed-crawler/lld/behavioral/template/template.py#L27): Abstract primitive operation to be filled in by subclasses.
+   - [parse_data()](file:///D:/distributed-crawler/lld/behavioral/template/template.py#L46): The **Template Method** defining the sequence `self.open() -> self.parse() -> self.close()`.
 2. **Concrete Subclasses**:
-   - [CSVParser](file:///D:/distributed-crawler/lld/template/template.py#L56): Implements CSV parsing.
-   - [PDFParser](file:///D:/distributed-crawler/lld/template/template.py#L64): Implements PDF parsing.
-3. **Execution Demonstration**: [main](file:///D:/distributed-crawler/lld/template/template.py#L72)
+   - [CSVParser](file:///D:/distributed-crawler/lld/behavioral/template/template.py#L56): Implements CSV parsing.
+   - [PDFParser](file:///D:/distributed-crawler/lld/behavioral/template/template.py#L64): Implements PDF parsing.
+3. **Execution Demonstration**: [main](file:///D:/distributed-crawler/lld/behavioral/template/template.py#L72)
    Executes both parsers by invoking `parse_data()`.
 
 ---
 
 ## 💻 Example Usage Code
 
-From [template.py](file:///D:/distributed-crawler/lld/template/template.py#L72):
+From [template.py](file:///D:/distributed-crawler/lld/behavioral/template/template.py#L72):
 
 ```python
 from template import CSVParser, PDFParser
@@ -189,5 +189,5 @@ concrete implementation of close file: document.pdf
 Run the script from the workspace root:
 
 ```bash
-python template/template.py
+python behavioral/template/template.py
 ```
