@@ -34,10 +34,10 @@ If you instantiate database drivers directly across dozens of service classes:
 3. **Fragility:** Adding a new database driver (e.g. `MongoGraphDB`) requires finding and updating every file where drivers are instantiated.
 
 ### The Solution (Centralized DBFactory)
-Introduce a [DBFactory](file:///D:/distributed-crawler/lld/factory/DBfactory.py#L74) class responsible for driver instantiation:
-1. Define a standard interface ([DBDriver](file:///D:/distributed-crawler/lld/factory/DBfactory.py#L4)) with CRUD methods (`find`, `update`, `delete`).
-2. Have [SqlDB](file:///D:/distributed-crawler/lld/factory/DBfactory.py#L44) and [NoSqlDB](file:///D:/distributed-crawler/lld/factory/DBfactory.py#L59) implement this interface.
-3. Client code calls `factory.get_db("sql")` and interacts solely through the [DBDriver](file:///D:/distributed-crawler/lld/factory/DBfactory.py#L4) interface.
+Introduce a [DBFactory](file:///D:/distributed-crawler/lld/creational/factory/DBfactory.py#L74) class responsible for driver instantiation:
+1. Define a standard interface ([DBDriver](file:///D:/distributed-crawler/lld/creational/factory/DBfactory.py#L4)) with CRUD methods (`find`, `update`, `delete`).
+2. Have [SqlDB](file:///D:/distributed-crawler/lld/creational/factory/DBfactory.py#L44) and [NoSqlDB](file:///D:/distributed-crawler/lld/creational/factory/DBfactory.py#L59) implement this interface.
+3. Client code calls `factory.get_db("sql")` and interacts solely through the [DBDriver](file:///D:/distributed-crawler/lld/creational/factory/DBfactory.py#L4) interface.
 
 ---
 
@@ -101,24 +101,24 @@ sequenceDiagram
 
 ## 🔍 Code Walkthrough
 
-The implementation is located in [DBfactory.py](file:///D:/distributed-crawler/lld/factory/DBfactory.py):
+The implementation is located in [DBfactory.py](file:///D:/distributed-crawler/lld/creational/factory/DBfactory.py):
 
-1. **The Interface**: [DBDriver](file:///D:/distributed-crawler/lld/factory/DBfactory.py#L4)
+1. **The Interface**: [DBDriver](file:///D:/distributed-crawler/lld/creational/factory/DBfactory.py#L4)
    Abstract Base Class defining the contract:
-   - [find(id)](file:///D:/distributed-crawler/lld/factory/DBfactory.py#L13): Retrieve record by ID.
-   - [update(id, new_value)](file:///D:/distributed-crawler/lld/factory/DBfactory.py#L23): Update record.
-   - [delete(id)](file:///D:/distributed-crawler/lld/factory/DBfactory.py#L34): Delete record.
+   - [find(id)](file:///D:/distributed-crawler/lld/creational/factory/DBfactory.py#L13): Retrieve record by ID.
+   - [update(id, new_value)](file:///D:/distributed-crawler/lld/creational/factory/DBfactory.py#L23): Update record.
+   - [delete(id)](file:///D:/distributed-crawler/lld/creational/factory/DBfactory.py#L34): Delete record.
 2. **Concrete Products**:
-   - [SqlDB](file:///D:/distributed-crawler/lld/factory/DBfactory.py#L44): Implements relational SQL database behavior.
-   - [NoSqlDB](file:///D:/distributed-crawler/lld/factory/DBfactory.py#L59): Implements NoSQL document database behavior.
-3. **The Factory**: [DBFactory](file:///D:/distributed-crawler/lld/factory/DBfactory.py#L74)
-   Contains [get_db()](file:///D:/distributed-crawler/lld/factory/DBfactory.py#L82) which normalizes the input string and instantiates the matching driver, or raises a `ValueError` for unsupported types.
+   - [SqlDB](file:///D:/distributed-crawler/lld/creational/factory/DBfactory.py#L44): Implements relational SQL database behavior.
+   - [NoSqlDB](file:///D:/distributed-crawler/lld/creational/factory/DBfactory.py#L59): Implements NoSQL document database behavior.
+3. **The Factory**: [DBFactory](file:///D:/distributed-crawler/lld/creational/factory/DBfactory.py#L74)
+   Contains [get_db()](file:///D:/distributed-crawler/lld/creational/factory/DBfactory.py#L82) which normalizes the input string and instantiates the matching driver, or raises a `ValueError` for unsupported types.
 
 ---
 
 ## 💻 Example Usage Code
 
-From [DBfactory.py](file:///D:/distributed-crawler/lld/factory/DBfactory.py#L106):
+From [DBfactory.py](file:///D:/distributed-crawler/lld/creational/factory/DBfactory.py#L106):
 
 ```python
 from DBfactory import DBFactory
@@ -211,5 +211,5 @@ delete called in no sql for 456
 Run the script from the workspace root:
 
 ```bash
-python factory/DBfactory.py
+python creational/factory/DBfactory.py
 ```

@@ -20,7 +20,7 @@ Think of building a **custom assembled PC or ordering a custom sandwich**:
 ## 🛠️ The Problem & Solution
 
 ### The Problem (Telescoping Constructor Anti-Pattern)
-Imagine a [Laptop](file:///D:/distributed-crawler/lld/builder/laptop.py#L1) class that needs specifications for CPU, GPU, RAM type, RAM size, storage type, screen size, battery capacity, keyboard layout, etc.
+Imagine a [Laptop](file:///D:/distributed-crawler/lld/creational/builder/laptop.py#L1) class that needs specifications for CPU, GPU, RAM type, RAM size, storage type, screen size, battery capacity, keyboard layout, etc.
 - **Telescoping Constructor**:
   ```python
   laptop = Laptop("Intel i7", "RTX 4070", "DDR5", "32GB", None, "15.6 inch", None, None)
@@ -30,10 +30,10 @@ Imagine a [Laptop](file:///D:/distributed-crawler/lld/builder/laptop.py#L1) clas
   Creating an empty object and manually setting properties (`laptop.cpu = ...`) leaves the object in a half-initialized, mutable, and inconsistent state during construction.
 
 ### The Solution (Fluent Builder Class)
-Extract object construction logic into a dedicated [LaptopBuilder](file:///D:/distributed-crawler/lld/builder/laptop_builder.py#L3) class:
+Extract object construction logic into a dedicated [LaptopBuilder](file:///D:/distributed-crawler/lld/creational/builder/laptop_builder.py#L3) class:
 1. Each configuration step has a dedicated, expressive setter (`set_cpu`, `set_gpu`, etc.).
 2. Each setter returns `self` to support readable **method chaining**.
-3. A final [build()](file:///D:/distributed-crawler/lld/builder/laptop_builder.py#L31) method validates the state, retrieves the fully constructed product, and resets the builder for subsequent runs.
+3. A final [build()](file:///D:/distributed-crawler/lld/creational/builder/laptop_builder.py#L31) method validates the state, retrieves the fully constructed product, and resets the builder for subsequent runs.
 
 ---
 
@@ -97,21 +97,21 @@ sequenceDiagram
 
 The codebase contains:
 
-1. **The Product**: [Laptop](file:///D:/distributed-crawler/lld/builder/laptop.py#L1)
+1. **The Product**: [Laptop](file:///D:/distributed-crawler/lld/creational/builder/laptop.py#L1)
    The complex object being created. It initializes with optional attributes and has a formatted `__str__` method to print its active specifications.
-2. **The Builder**: [LaptopBuilder](file:///D:/distributed-crawler/lld/builder/laptop_builder.py#L3)
-   Encapsulates the construction of the [Laptop](file:///D:/distributed-crawler/lld/builder/laptop.py#L1):
-   - [reset()](file:///D:/distributed-crawler/lld/builder/laptop_builder.py#L8): Instantiates a fresh [Laptop](file:///D:/distributed-crawler/lld/builder/laptop.py#L1) instance.
-   - [set_cpu()](file:///D:/distributed-crawler/lld/builder/laptop_builder.py#L11), [set_gpu()](file:///D:/distributed-crawler/lld/builder/laptop_builder.py#L15), [set_ram_type()](file:///D:/distributed-crawler/lld/builder/laptop_builder.py#L19), [set_ram_size()](file:///D:/distributed-crawler/lld/builder/laptop_builder.py#L23), [set_screen_size()](file:///D:/distributed-crawler/lld/builder/laptop_builder.py#L27): Fluent configuration methods returning `self`.
-   - [build()](file:///D:/distributed-crawler/lld/builder/laptop_builder.py#L31): Returns the completed laptop and resets its internal reference for the next build cycle.
-3. **The Client**: [main.py](file:///D:/distributed-crawler/lld/builder/main.py#L17)
+2. **The Builder**: [LaptopBuilder](file:///D:/distributed-crawler/lld/creational/builder/laptop_builder.py#L3)
+   Encapsulates the construction of the [Laptop](file:///D:/distributed-crawler/lld/creational/builder/laptop.py#L1):
+   - [reset()](file:///D:/distributed-crawler/lld/creational/builder/laptop_builder.py#L8): Instantiates a fresh [Laptop](file:///D:/distributed-crawler/lld/creational/builder/laptop.py#L1) instance.
+   - [set_cpu()](file:///D:/distributed-crawler/lld/creational/builder/laptop_builder.py#L11), [set_gpu()](file:///D:/distributed-crawler/lld/creational/builder/laptop_builder.py#L15), [set_ram_type()](file:///D:/distributed-crawler/lld/creational/builder/laptop_builder.py#L19), [set_ram_size()](file:///D:/distributed-crawler/lld/creational/builder/laptop_builder.py#L23), [set_screen_size()](file:///D:/distributed-crawler/lld/creational/builder/laptop_builder.py#L27): Fluent configuration methods returning `self`.
+   - [build()](file:///D:/distributed-crawler/lld/creational/builder/laptop_builder.py#L31): Returns the completed laptop and resets its internal reference for the next build cycle.
+3. **The Client**: [main.py](file:///D:/distributed-crawler/lld/creational/builder/main.py#L17)
    Constructs distinct product variations (Gaming vs Budget laptop) using method chaining.
 
 ---
 
 ## 💻 Example Usage Code
 
-From [main.py](file:///D:/distributed-crawler/lld/builder/main.py):
+From [main.py](file:///D:/distributed-crawler/lld/creational/builder/main.py):
 
 ```python
 from laptop_builder import LaptopBuilder
@@ -200,5 +200,5 @@ Laptop Specifications:
 Run the main file from the workspace root:
 
 ```bash
-python builder/main.py
+python creational/builder/main.py
 ```

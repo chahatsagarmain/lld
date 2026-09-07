@@ -19,7 +19,7 @@ Think of a **country's official Central Bank or the President**:
 ## 🛠️ The Problem & Solution
 
 ### The Problem (Multiple Instances & State Desynchronization)
-Suppose you have a [Logger](file:///D:/distributed-crawler/lld/singleton/logger.py#L25) or Database Connection Pool.
+Suppose you have a [Logger](file:///D:/distributed-crawler/lld/creational/singleton/logger.py#L25) or Database Connection Pool.
 - If every module creates its own instance (`logger = Logger()`), multiple file handles are opened to the same log file on disk, resulting in file write contention, data interleaving, and memory waste.
 - If multiple threads instantiate the class concurrently without synchronization, race conditions can cause multiple instances to be created in memory.
 - If subsequent instantiations pass different parameters (`log2 = Logger("override.log")`), a naive implementation would overwrite the existing configuration!
@@ -83,9 +83,9 @@ sequenceDiagram
 
 This repository provides two implementations demonstrating different trade-offs:
 
-### 1. Production Thread-Safe Singleton ([logger.py](file:///D:/distributed-crawler/lld/singleton/logger.py))
-- **`_instance` & `_lock`** ([lines 27-28](file:///D:/distributed-crawler/lld/singleton/logger.py#L27-L28)): Class variables shared across all callers.
-- **[__new__](file:///D:/distributed-crawler/lld/singleton/logger.py#L30)**: Implements Double-Checked Locking:
+### 1. Production Thread-Safe Singleton ([logger.py](file:///D:/distributed-crawler/lld/creational/singleton/logger.py))
+- **`_instance` & `_lock`** ([lines 27-28](file:///D:/distributed-crawler/lld/creational/singleton/logger.py#L27-L28)): Class variables shared across all callers.
+- **[__new__](file:///D:/distributed-crawler/lld/creational/singleton/logger.py#L30)**: Implements Double-Checked Locking:
   ```python
   def __new__(cls, *args, **kwargs):
       if cls._instance is None:       # 1st check: Avoid lock overhead once created
@@ -94,26 +94,26 @@ This repository provides two implementations demonstrating different trade-offs:
                   cls._instance = super().__new__(cls)
       return cls._instance
   ```
-- **[__init__](file:///D:/distributed-crawler/lld/singleton/logger.py#L39)**: Guarded initialization:
+- **[__init__](file:///D:/distributed-crawler/lld/creational/singleton/logger.py#L39)**: Guarded initialization:
   ```python
   def __init__(self, file_name=None):
       if not hasattr(self, "_initialized"):
           self.file_name = file_name
           self._initialized = True
   ```
-- **[print_log](file:///D:/distributed-crawler/lld/singleton/logger.py#L46)**: Method utilizing the singleton state.
+- **[print_log](file:///D:/distributed-crawler/lld/creational/singleton/logger.py#L46)**: Method utilizing the singleton state.
 
-### 2. Static Method Class Variable Singleton ([other_way.py](file:///D:/distributed-crawler/lld/singleton/other_way.py))
+### 2. Static Method Class Variable Singleton ([other_way.py](file:///D:/distributed-crawler/lld/creational/singleton/other_way.py))
 A simpler, classical approach common in Java/C++ style code:
-- [Singleton](file:///D:/distributed-crawler/lld/singleton/other_way.py#L4) with class variable `instance = None`.
-- [getSingleton()](file:///D:/distributed-crawler/lld/singleton/other_way.py#L8): Static factory method checking `if Singleton.instance is None:` and instantiating on demand.
+- [Singleton](file:///D:/distributed-crawler/lld/creational/singleton/other_way.py#L4) with class variable `instance = None`.
+- [getSingleton()](file:///D:/distributed-crawler/lld/creational/singleton/other_way.py#L8): Static factory method checking `if Singleton.instance is None:` and instantiating on demand.
 - *Note:* While simpler, it is not thread-safe without locks and does not prevent callers from directly calling `Singleton()`.
 
 ---
 
 ## 💻 Example Usage Code
 
-From [logger.py](file:///D:/distributed-crawler/lld/singleton/logger.py#L52):
+From [logger.py](file:///D:/distributed-crawler/lld/creational/singleton/logger.py#L52):
 
 ```python
 from logger import Logger
@@ -197,8 +197,8 @@ Run either implementation from the workspace root:
 
 ```bash
 # 1. Thread-safe Double-Checked Locking Logger
-python singleton/logger.py
+python creational/singleton/logger.py
 
 # 2. Class Variable Static Method Demo
-python singleton/other_way.py
+python creational/singleton/other_way.py
 ```

@@ -30,12 +30,12 @@ Suppose your application supports multiple database backends: **SQL** (relationa
 If client code instantiates these products directly using `new` or individual simple factories, a client could mistakenly pair a `SqlConnection` with a `NoSqlQueryBuilder`. The resulting SQL engine cannot execute a MongoDB-style query, causing severe runtime errors.
 
 ### The Solution (Family Factory Interface)
-Define an [AbstractDatabaseFactory](file:///D:/distributed-crawler/lld/abstract%20factory/db_factory.py#L12) interface declaring creation methods for *every* product in the family:
+Define an [AbstractDatabaseFactory](file:///D:/distributed-crawler/lld/creational/abstract%20factory/db_factory.py#L12) interface declaring creation methods for *every* product in the family:
 - `create_driver() -> DBDriver`
 - `create_connection() -> DBConnection`
 - `create_query_builder() -> QueryBuilder`
 
-Then create concrete factories ([SqlDatabaseFactory](file:///D:/distributed-crawler/lld/abstract%20factory/db_factory.py#L36) and [NoSqlDatabaseFactory](file:///D:/distributed-crawler/lld/abstract%20factory/db_factory.py#L54)). The client code only interacts with the abstract factory and abstract product interfaces. Switching from SQL to NoSQL requires passing a different factory instance, ensuring 100% product compatibility.
+Then create concrete factories ([SqlDatabaseFactory](file:///D:/distributed-crawler/lld/creational/abstract%20factory/db_factory.py#L36) and [NoSqlDatabaseFactory](file:///D:/distributed-crawler/lld/creational/abstract%20factory/db_factory.py#L54)). The client code only interacts with the abstract factory and abstract product interfaces. Switching from SQL to NoSQL requires passing a different factory instance, ensuring 100% product compatibility.
 
 ---
 
@@ -154,29 +154,29 @@ sequenceDiagram
 The implementation is modularized across specialized files:
 
 1. **Abstract Products**:
-   - [DBConnection](file:///D:/distributed-crawler/lld/abstract%20factory/db_connection.py#L3): Declares the interface for opening database connections via `connect()`.
-   - [QueryBuilder](file:///D:/distributed-crawler/lld/abstract%20factory/query_builder.py#L3): Declares `build_query(table, conditions)` returning formatted query strings.
-   - [DBDriver](file:///D:/distributed-crawler/lld/factory/DBfactory.py#L4): Declares CRUD methods (`find`, `update`, `delete`). Reused from the factory module.
+   - [DBConnection](file:///D:/distributed-crawler/lld/creational/abstract%20factory/db_connection.py#L3): Declares the interface for opening database connections via `connect()`.
+   - [QueryBuilder](file:///D:/distributed-crawler/lld/creational/abstract%20factory/query_builder.py#L3): Declares `build_query(table, conditions)` returning formatted query strings.
+   - [DBDriver](file:///D:/distributed-crawler/lld/creational/factory/DBfactory.py#L4): Declares CRUD methods (`find`, `update`, `delete`). Reused from the factory module.
 
 2. **Concrete Products**:
-   - **SQL Family**: [SqlConnection](file:///D:/distributed-crawler/lld/abstract%20factory/db_connection.py#L16), [SqlQueryBuilder](file:///D:/distributed-crawler/lld/abstract%20factory/query_builder.py#L16), and [SqlDB](file:///D:/distributed-crawler/lld/factory/DBfactory.py#L44).
-   - **NoSQL Family**: [NoSqlConnection](file:///D:/distributed-crawler/lld/abstract%20factory/db_connection.py#L25), [NoSqlQueryBuilder](file:///D:/distributed-crawler/lld/abstract%20factory/query_builder.py#L26), and [NoSqlDB](file:///D:/distributed-crawler/lld/factory/DBfactory.py#L59).
+   - **SQL Family**: [SqlConnection](file:///D:/distributed-crawler/lld/creational/abstract%20factory/db_connection.py#L16), [SqlQueryBuilder](file:///D:/distributed-crawler/lld/creational/abstract%20factory/query_builder.py#L16), and [SqlDB](file:///D:/distributed-crawler/lld/creational/factory/DBfactory.py#L44).
+   - **NoSQL Family**: [NoSqlConnection](file:///D:/distributed-crawler/lld/creational/abstract%20factory/db_connection.py#L25), [NoSqlQueryBuilder](file:///D:/distributed-crawler/lld/creational/abstract%20factory/query_builder.py#L26), and [NoSqlDB](file:///D:/distributed-crawler/lld/creational/factory/DBfactory.py#L59).
 
 3. **Abstract Factory**:
-   - [AbstractDatabaseFactory](file:///D:/distributed-crawler/lld/abstract%20factory/db_factory.py#L12): Enforces factory methods `create_driver()`, `create_connection()`, and `create_query_builder()`.
+   - [AbstractDatabaseFactory](file:///D:/distributed-crawler/lld/creational/abstract%20factory/db_factory.py#L12): Enforces factory methods `create_driver()`, `create_connection()`, and `create_query_builder()`.
 
 4. **Concrete Factories**:
-   - [SqlDatabaseFactory](file:///D:/distributed-crawler/lld/abstract%20factory/db_factory.py#L36): Instantiates and returns SQL family components.
-   - [NoSqlDatabaseFactory](file:///D:/distributed-crawler/lld/abstract%20factory/db_factory.py#L54): Instantiates and returns NoSQL family components.
+   - [SqlDatabaseFactory](file:///D:/distributed-crawler/lld/creational/abstract%20factory/db_factory.py#L36): Instantiates and returns SQL family components.
+   - [NoSqlDatabaseFactory](file:///D:/distributed-crawler/lld/creational/abstract%20factory/db_factory.py#L54): Instantiates and returns NoSQL family components.
 
 5. **Client Code**:
-   - [client_code](file:///D:/distributed-crawler/lld/abstract%20factory/main.py#L3): Accepts any `AbstractDatabaseFactory`, consumes its products exclusively via abstract interfaces, completely decoupled from underlying implementations.
+   - [client_code](file:///D:/distributed-crawler/lld/creational/abstract%20factory/main.py#L3): Accepts any `AbstractDatabaseFactory`, consumes its products exclusively via abstract interfaces, completely decoupled from underlying implementations.
 
 ---
 
 ## 💻 Example Usage Code
 
-From [main.py](file:///D:/distributed-crawler/lld/abstract%20factory/main.py):
+From [main.py](file:///D:/distributed-crawler/lld/creational/abstract%20factory/main.py):
 
 ```python
 from db_factory import AbstractDatabaseFactory, SqlDatabaseFactory, NoSqlDatabaseFactory
@@ -269,5 +269,5 @@ delete called in no sql for user_101
 Run the main file from the workspace root:
 
 ```bash
-python "abstract factory/main.py"
+python "creational/abstract factory/main.py"
 ```

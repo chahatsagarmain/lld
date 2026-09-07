@@ -23,7 +23,7 @@ When you travel from the US to the UK, your laptop's two-prong US plug cannot fi
 Suppose your application has an in-house notification system built around an interface expecting:
 `send(sender, reciever, title, body)`
 
-Later, the team decides to integrate a high-performance external third-party provider ([ThirdPartyEmailService](file:///D:/distributed-crawler/lld/adapter/adapter.py#L28)). However, their SDK defines a different method signature:
+Later, the team decides to integrate a high-performance external third-party provider ([ThirdPartyEmailService](file:///D:/distributed-crawler/lld/structural/adapter/adapter.py#L28)). However, their SDK defines a different method signature:
 `send_email(sender, reciever, title, body, bcc, cc)`
 
 If you change your entire codebase to call `send_email(...)` directly:
@@ -32,7 +32,7 @@ If you change your entire codebase to call `send_email(...)` directly:
 3. If you ever switch vendors again, you must rewrite calls everywhere.
 
 ### The Solution (Wrapper Adapter)
-Create an adapter class ([ThirdPartyEmailServiceAdapter](file:///D:/distributed-crawler/lld/adapter/adapter.py#L33)) that implements your internal [NotificationService](file:///D:/distributed-crawler/lld/adapter/adapter.py#L17) interface and wraps an instance of the third-party service ([ThirdPartyEmailService](file:///D:/distributed-crawler/lld/adapter/adapter.py#L28)).
+Create an adapter class ([ThirdPartyEmailServiceAdapter](file:///D:/distributed-crawler/lld/structural/adapter/adapter.py#L33)) that implements your internal [NotificationService](file:///D:/distributed-crawler/lld/structural/adapter/adapter.py#L17) interface and wraps an instance of the third-party service ([ThirdPartyEmailService](file:///D:/distributed-crawler/lld/structural/adapter/adapter.py#L28)).
 
 When the client calls `send(...)`, the adapter intercepts the call, maps the parameters, provides default values for missing fields (such as `bcc=None`, `cc=None`), and forwards the call to `send_email(...)`.
 
@@ -87,22 +87,22 @@ sequenceDiagram
 
 ## 🔍 Code Walkthrough
 
-The implementation in [adapter.py](file:///D:/distributed-crawler/lld/adapter/adapter.py) contains:
+The implementation in [adapter.py](file:///D:/distributed-crawler/lld/structural/adapter/adapter.py) contains:
 
-1. **Target Interface**: [NotificationService](file:///D:/distributed-crawler/lld/adapter/adapter.py#L17)
+1. **Target Interface**: [NotificationService](file:///D:/distributed-crawler/lld/structural/adapter/adapter.py#L17)
    Abstract Base Class defining the expected contract: `send(self, sender, reciever, title, body)`.
-2. **Concrete Target**: [EmailNotificationService](file:///D:/distributed-crawler/lld/adapter/adapter.py#L23)
+2. **Concrete Target**: [EmailNotificationService](file:///D:/distributed-crawler/lld/structural/adapter/adapter.py#L23)
    Standard in-house service implementing the target interface.
-3. **Adaptee**: [ThirdPartyEmailService](file:///D:/distributed-crawler/lld/adapter/adapter.py#L28)
+3. **Adaptee**: [ThirdPartyEmailService](file:///D:/distributed-crawler/lld/structural/adapter/adapter.py#L28)
    The external service that contains the desired business capability but with an incompatible method signature `send_email`.
-4. **Adapter**: [ThirdPartyEmailServiceAdapter](file:///D:/distributed-crawler/lld/adapter/adapter.py#L33)
-   Inherits from [NotificationService](file:///D:/distributed-crawler/lld/adapter/adapter.py#L17) and takes [ThirdPartyEmailService](file:///D:/distributed-crawler/lld/adapter/adapter.py#L28) in its constructor. Translates calls seamlessly.
+4. **Adapter**: [ThirdPartyEmailServiceAdapter](file:///D:/distributed-crawler/lld/structural/adapter/adapter.py#L33)
+   Inherits from [NotificationService](file:///D:/distributed-crawler/lld/structural/adapter/adapter.py#L17) and takes [ThirdPartyEmailService](file:///D:/distributed-crawler/lld/structural/adapter/adapter.py#L28) in its constructor. Translates calls seamlessly.
 
 ---
 
 ## 💻 Example Usage Code
 
-From [adapter.py](file:///D:/distributed-crawler/lld/adapter/adapter.py#L41):
+From [adapter.py](file:///D:/distributed-crawler/lld/structural/adapter/adapter.py#L41):
 
 ```python
 from adapter import EmailNotificationService, ThirdPartyEmailService, ThirdPartyEmailServiceAdapter
@@ -177,5 +177,5 @@ called third party email service sender@app.com , user@app.com , Notice , System
 Run the script from the workspace root:
 
 ```bash
-python adapter/adapter.py
+python structural/adapter/adapter.py
 ```
